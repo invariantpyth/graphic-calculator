@@ -5,3 +5,7 @@ structures_debug.o:
 
 structures.o:
 	$(CC) -c ./structures/structures.c -o ../bin/release/structures.o
+
+clean_binaries:
+	rm -f ../bin/debug/*.o
+	rm -f ../bin/release/*.o
