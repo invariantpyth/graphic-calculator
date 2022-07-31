@@ -3,13 +3,13 @@
 #include <stdlib.h>
 
 Stack *init_stack(int length) {
-    Stack *new_stack = malloc(sizeof(Stack_node) * length);
+    Stack *new_stack = malloc(sizeof(Lexeme) * length);
     new_stack->capacity = length;
     new_stack->stack_head = 0;
     return new_stack;
 }
 
-int pop(Stack *my_stack, Stack_node *last_node) {
+int pop(Stack *my_stack, Lexeme *last_node) {
     int flag = 1;
     if (my_stack->stack_head != -1) {
         *last_node = my_stack->stack[my_stack->stack_head];
@@ -20,7 +20,7 @@ int pop(Stack *my_stack, Stack_node *last_node) {
     return flag;
 }
 
-int push(Stack *my_stack, Stack_node new_node) {
+int push(Stack *my_stack, Lexeme new_node) {
     int flag = 1;
     if (my_stack->stack_head + 1 < my_stack->capacity) {
         my_stack->stack_head = my_stack->stack_head + 1;

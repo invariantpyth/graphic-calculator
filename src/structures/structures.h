@@ -5,19 +5,19 @@
 
 typedef enum Lexeme_type { OPERATOR, OPERAND } Lexeme_type;
 
-typedef struct Stack_node {
+typedef struct Lexeme {
     char *lexeme;
     Lexeme_type type;
-} Stack_node;
+} Lexeme;
 
 typedef struct Stack {
-    Stack_node *stack;
+    Lexeme *stack;
     int stack_head;
     int capacity;
 } Stack;
 
 Stack *init_stack(int length);
-int pop(Stack *my_stack, Stack_node *last_node);
-int push(Stack *my_stack, Stack_node new_node);
+int pop(Stack *my_stack, Lexeme *last_node);
+int push(Stack *my_stack, Lexeme new_node);
 
 #endif  // STRUCTURES_STRUCTURES_H_
