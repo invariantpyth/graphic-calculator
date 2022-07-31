@@ -10,6 +10,11 @@ typedef struct Lexeme {
     Lexeme_type type;
 } Lexeme;
 
+typedef struct Expression {
+    Lexeme* lexeme_array;
+    int length;
+} Expression;
+
 typedef struct Stack {
     Lexeme *stack;
     int stack_head;
