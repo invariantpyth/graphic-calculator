@@ -1,0 +1,6 @@
+#ifndef SRC_S21_SORT_STATION_H_
+#define SRC_S21_SORT_STATION_H_
+
+
+
+#endif  // SRC_S21_SORT_STATION_H_
