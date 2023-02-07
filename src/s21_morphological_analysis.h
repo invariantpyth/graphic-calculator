@@ -44,8 +44,8 @@ const char variable[] = "x";
 
 char* which_operator(char* operator, int is_unary);
 double atof(char* number);
-int is_operator(char* str);
-int is_number(char* str);
+size_t is_operator(char* str);
+size_t is_number(char* str);
 char** parse(char* input_string);
 
 #endif  // SRC_MORPHOLOGICAL_ANALYSIS_H_
