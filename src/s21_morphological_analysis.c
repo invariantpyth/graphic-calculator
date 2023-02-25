@@ -24,8 +24,8 @@ const char minus[] = "-";
 const char multiply[] = "*";
 const char divide[] = "/";
 const char power[] = "^";
-const char unary_plus[] = "+";
-const char unary_minus[] = "-";
+const char unary_plus[] = "$";
+const char unary_minus[] = "~";
 const char* operators[] = {sin_o,
                            cos_o,
                            tan_o,
@@ -43,8 +43,8 @@ const char* operators[] = {sin_o,
                            multiply,
                            divide,
                            power,
-                           unary_minus,
-                           unary_plus};
+                           unary_plus,
+                           unary_minus};
 const char variable[] = "x";
 
 const char* which_operator(char* operator, int is_unary) {
@@ -55,10 +55,10 @@ const char* which_operator(char* operator, int is_unary) {
   while (strcmp(buffer, operators[i])) {
     i++;
   }
-  if (i == 13 && is_unary) {
+  if (i == 12 && is_unary) {
     i = 17;
   }
-  if (i == 14 && is_unary) {
+  if (i == 13 && is_unary) {
     i = 18;
   }
   return operators[i];
@@ -122,6 +122,10 @@ stack_node* parse(char* input_string) {
       point += block_size;
     }
     if (input_string[point] == '(') {
+      if (lexemes != NULL && (not_in_operators(lexemes->lexeme) ||
+                              lexemes->lexeme == close_parenthesis)) {
+        lexemes = push((char*)multiply, lexemes);
+      }
       lexemes = push((char*)open_parenthesis, lexemes);
       point++;
     }
@@ -142,10 +146,10 @@ stack_node* parse(char* input_string) {
     }
   }
   stack_node* reversed_lexemes = NULL;
-  do {
+  while (lexemes != NULL) {
     char* str = pop(&lexemes);
     reversed_lexemes = push(str, reversed_lexemes);
-  } while (lexemes != NULL);
+  };
   return reversed_lexemes;
 }
 
@@ -153,4 +157,37 @@ double atof_my(char* number) {
   double ret_value = 0;
   sscanf(number, "%lf", &ret_value);
   return ret_value;
+}
+
+int is_unary(char* op) {
+  return (op == unary_minus || op == unary_plus) ? 1 : 0;
+}
+
+int is_binary(char* op) { return !(is_unary(op) || is_prefix(op)); }
+
+int is_prefix(char* op) {
+  size_t i = 0;
+  int ret = 0;
+  while (ret == 0 && i < 9) {
+    ret = (op == operators[i]) ? 1 : 0;
+    i++;
+  }
+  ret = (op == unary_minus) ? 1 : 0;
+  ret = ret || (op == unary_plus) ? 1 : 0;
+
+  return ret;
+}
+
+int rank(char* op) {
+  int rank_value = 0;
+  if (is_prefix(op)) {
+    rank_value = 4;
+  } else if (op == power) {
+    rank_value = 3;
+  } else if (op == divide || op == multiply) {
+    rank_value = 2;
+  } else {
+    rank_value = 1;
+  }
+  return rank_value;
 }

@@ -13,7 +13,7 @@ stack_node* push(char* lexeme, stack_node* previous_node) {
 
 char* pop(stack_node** stack_top) {
   char* ret_str = NULL;
-  if (stack_top != NULL) {
+  if (*stack_top != NULL) {
     ret_str = (*stack_top)->lexeme;
     stack_node* old_top = *stack_top;
     *stack_top = (*stack_top)->previous_node;
