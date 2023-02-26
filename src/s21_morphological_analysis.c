@@ -95,62 +95,57 @@ static int not_in_operators(char* pointer) {
   return not_here;
 }
 
-stack_node* parse(char* input_string) {
-  stack_node* lexemes = NULL;
+List* parse(char* input_string) {
+  List* lexemes = calloc(1, sizeof(List));
   size_t point = 0;
   while (input_string[point] != '\0') {
     size_t block_size = 0;
     if ((block_size = is_operator(input_string + point))) {
       int is_unary = 0;
-      if (lexemes == NULL || lexemes->lexeme == open_parenthesis) {
+      if (lexemes == NULL || lexemes->end->lexeme == open_parenthesis) {
         is_unary = 1;
       }
       const char* op = which_operator(input_string + point, is_unary);
       if (lexemes != NULL &&
-          (not_in_operators(lexemes->lexeme) ||
-           lexemes->lexeme == close_parenthesis) &&
+          (not_in_operators(lexemes->end->lexeme) ||
+           lexemes->end->lexeme == close_parenthesis) &&
           !is_symbol_operator(*op)) {
-        lexemes = push((char*)multiply, lexemes);
+        push_back((char*)multiply, lexemes);
       }
-      lexemes = push((char*)op, lexemes);
+      push_back((char*)op, lexemes);
       point += block_size;
     }
     if ((block_size = is_number(input_string + point))) {
       char* number = calloc(block_size + 1, sizeof(char));
       strncpy(number, input_string + point, block_size);
-      lexemes = push(number, lexemes);
+      push_back(number, lexemes);
       point += block_size;
     }
     if (input_string[point] == '(') {
-      if (lexemes != NULL && (not_in_operators(lexemes->lexeme) ||
-                              lexemes->lexeme == close_parenthesis)) {
-        lexemes = push((char*)multiply, lexemes);
+      if (lexemes != NULL && (not_in_operators(lexemes->end->lexeme) ||
+                              lexemes->end->lexeme == close_parenthesis)) {
+        push_back((char*)multiply, lexemes);
       }
-      lexemes = push((char*)open_parenthesis, lexemes);
+      push_back((char*)open_parenthesis, lexemes);
       point++;
     }
     if (input_string[point] == ')') {
-      lexemes = push((char*)close_parenthesis, lexemes);
+      push_back((char*)close_parenthesis, lexemes);
       point++;
     }
     if (input_string[point] == 'x') {
-      if (lexemes != NULL && (not_in_operators(lexemes->lexeme) ||
-                              lexemes->lexeme == close_parenthesis)) {
-        lexemes = push((char*)multiply, lexemes);
+      if (lexemes != NULL && (not_in_operators(lexemes->end->lexeme) ||
+                              lexemes->end->lexeme == close_parenthesis)) {
+        push_back((char*)multiply, lexemes);
       }
-      lexemes = push((char*)variable, lexemes);
+      push_back((char*)variable, lexemes);
       point++;
     }
     if (input_string[point] == ' ') {
       point++;
     }
   }
-  stack_node* reversed_lexemes = NULL;
-  while (lexemes != NULL) {
-    char* str = pop(&lexemes);
-    reversed_lexemes = push(str, reversed_lexemes);
-  };
-  return reversed_lexemes;
+  return lexemes;
 }
 
 double atof_my(char* number) {

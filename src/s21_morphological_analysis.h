@@ -11,6 +11,6 @@ int is_unary(char* op);
 int is_prefix(char* op);
 int is_binary(char* op);
 int rank(char* op);
-stack_node* parse(char* input_string);
+List* parse(char* input_string);
 
 #endif  // SRC_MORPHOLOGICAL_ANALYSIS_H_
