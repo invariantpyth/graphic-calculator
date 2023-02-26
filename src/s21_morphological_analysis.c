@@ -102,11 +102,11 @@ List* parse(char* input_string) {
     size_t block_size = 0;
     if ((block_size = is_operator(input_string + point))) {
       int is_unary = 0;
-      if (lexemes == NULL || lexemes->end->lexeme == open_parenthesis) {
+      if (lexemes->end == NULL || lexemes->end->lexeme == open_parenthesis) {
         is_unary = 1;
       }
       const char* op = which_operator(input_string + point, is_unary);
-      if (lexemes != NULL &&
+      if (lexemes->end != NULL &&
           (not_in_operators(lexemes->end->lexeme) ||
            lexemes->end->lexeme == close_parenthesis) &&
           !is_symbol_operator(*op)) {
@@ -122,7 +122,7 @@ List* parse(char* input_string) {
       point += block_size;
     }
     if (input_string[point] == '(') {
-      if (lexemes != NULL && (not_in_operators(lexemes->end->lexeme) ||
+      if (lexemes->end != NULL && (not_in_operators(lexemes->end->lexeme) ||
                               lexemes->end->lexeme == close_parenthesis)) {
         push_back((char*)multiply, lexemes);
       }
@@ -134,7 +134,7 @@ List* parse(char* input_string) {
       point++;
     }
     if (input_string[point] == 'x') {
-      if (lexemes != NULL && (not_in_operators(lexemes->end->lexeme) ||
+      if (lexemes->end != NULL && (not_in_operators(lexemes->end->lexeme) ||
                               lexemes->end->lexeme == close_parenthesis)) {
         push_back((char*)multiply, lexemes);
       }
@@ -167,7 +167,7 @@ int is_prefix(char* op) {
     ret = (op == operators[i]) ? 1 : 0;
     i++;
   }
-  ret = (op == unary_minus) ? 1 : 0;
+  ret = ret || (op == unary_minus) ? 1 : 0;
   ret = ret || (op == unary_plus) ? 1 : 0;
 
   return ret;

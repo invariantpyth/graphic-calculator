@@ -52,10 +52,9 @@ void destroy_list(List *lst) {
 void print_list(List lst) {
   printf("List: ");
   Node* start_node = lst.start;
-  while (start_node->another_node != NULL) {
+  while (start_node != NULL) {
     printf("%s ", start_node->lexeme);
     start_node = start_node->another_node;
   }
-  printf("%s ", start_node->lexeme);
   printf("\n");
 }

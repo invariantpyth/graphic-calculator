@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 int main() {
-    char expression[] = "3 + 4 * 2 / (1 - 5)^2";
+    char expression[] = "cos(1 + sin(log(-5) - asin(8))^2)";
     List* RPN = turn_to_rev_pol(expression);
     print_list(*RPN);
     free_all_numbers(RPN);

@@ -52,7 +52,7 @@ static int is_ok_for_binaries(char* lex, Stack* temp_stack) {
   return is_prefix(lex) ||
          (temp_stack->current_top != NULL &&
           *temp_stack->current_top->lexeme != '(' &&
-          ((rank(lex) <= rank(temp_stack->current_top->lexeme)) ||
+          ((rank(lex) < rank(temp_stack->current_top->lexeme)) ||
            (*temp_stack->current_top->lexeme != '^' &&
             (rank(lex) == rank(temp_stack->current_top->lexeme)))));
 }
@@ -66,7 +66,7 @@ List* turn_to_rev_pol(char* input_string) {
   while (current_lex_from_input != NULL && error == 0) {
     char* lex = current_lex_from_input->lexeme;
     current_lex_from_input = current_lex_from_input->another_node;
-    if (is_number(lex)) {
+    if (is_number(lex) || *lex == 'x') {
       push_back(lex, rpn);
       print_list(*rpn);
       print_stack(*temp_stack);
