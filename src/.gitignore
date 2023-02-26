@@ -1,0 +1,7 @@
+*.o
+temp
+a.out
+*.a
+../.DS_Store
+.DS_Store
+.vscode/
