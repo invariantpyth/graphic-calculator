@@ -92,7 +92,11 @@ double evaluate(char* expression) {
     }
     current_node = current_node->another_node;
   }
+  double* number = (double*)pop(numbers);
+  double ret_value = *number;
+  free(number);
   free_all_numbers(rpn);
   destroy_list(rpn);
-  return *(double*)numbers->current_top->lexeme;
+  free(numbers);
+  return ret_value;
 }
