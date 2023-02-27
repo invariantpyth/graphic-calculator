@@ -5,38 +5,6 @@
 
 #include "s21_morphological_analysis.h"
 
-// void push_back(output_string* output, char* lex) {
-//   output->lexs = realloc(output->lexs, output->amount + 1);
-//   output->lexs[output->amount] = lex;
-//   output->amount++;
-// }
-
-// static void print_stack(stack_node* st) {
-//   printf("stack: ");
-//   while (st != NULL) {
-//     printf("%s ", st->lexeme);
-//     st = st->previous_node;
-//   }
-//   printf("\n");
-// }
-
-// static void print_string(output_string* st) {
-//   printf("output: ");
-//   for (int i = 0; i < st->amount; i++) {
-//     printf("%s ", st->lexs[i]);
-//   }
-//   printf("\n\n");
-// }
-
-// static void destruct_stack(stack_node* stack_top) {
-//   while (stack_top != NULL) {
-//     char* cont = pop(&stack_top);
-//     if (is_number(cont)) {
-//       free(cont);
-//     }
-//   }
-// }
-
 void free_all_numbers(List* lst) {
   Node* start_node = lst->start;
   while (start_node != NULL) {
@@ -68,59 +36,63 @@ List* turn_to_rev_pol(char* input_string) {
     current_lex_from_input = current_lex_from_input->another_node;
     if (is_number(lex) || *lex == 'x') {
       push_back(lex, rpn);
-      print_list(*rpn);
-      print_stack(*temp_stack);
-      printf("\n");
     } else if (is_prefix(lex)) {
       push(lex, temp_stack);
-      print_list(*rpn);
-      print_stack(*temp_stack);
-      printf("\n");
     } else if (*lex == '(') {
       push(lex, temp_stack);
-      print_list(*rpn);
-      print_stack(*temp_stack);
-      printf("\n");
     } else if (*lex == ')') {
       while (*temp_stack->current_top->lexeme != '(' && error == 0) {
         push_back(pop(temp_stack), rpn);
         error = (temp_stack == NULL) ? 1 : 0;
-        print_list(*rpn);
-        print_stack(*temp_stack);
-        printf("\n");
       }
       pop(temp_stack);
-      print_list(*rpn);
-      print_stack(*temp_stack);
-      printf("\n");
     } else if (is_binary(lex)) {
       while (is_ok_for_binaries(lex, temp_stack)) {
         push_back(pop(temp_stack), rpn);
-        print_list(*rpn);
-        print_stack(*temp_stack);
-        printf("\n");
       }
       push(lex, temp_stack);
-      print_list(*rpn);
-      print_stack(*temp_stack);
-      printf("\n");
     }
   }
-  while (temp_stack->current_top != NULL && error == 0) {
+  while (temp_stack->current_top != NULL) {
     char* op = pop(temp_stack);
     if (is_number(op)) {
       error = 1;
-    } else {
-      push_back(op, rpn);
     }
+    push_back(op, rpn);
+  }
+  if (error != 0) {
+    free_all_numbers(rpn);
+    destroy_list(rpn);
   }
   free(temp_stack);
   destroy_list(expression);
-  free(expression);
-  // if (error != 0) {
-  //   destruct_stack(expression);
-  //   destruct_stack(temp_stack);
-  //   destruct_output_string(reverse_polish_expression);
-  // }
+
   return rpn;
+}
+
+
+double evaluate(char* expression) {
+  List* rpn = turn_to_rev_pol(expression);
+  Stack* numbers = calloc(1, sizeof(Stack));
+  Node* current_node = rpn->start;
+  // int err = (rpn));
+  while (current_node != NULL) {
+    if (is_number(current_node->lexeme)) {
+      double* number = calloc(1, sizeof(double));
+      *number = atof_my(current_node->lexeme);
+      push((char*)number, numbers);
+    } else if (is_prefix(current_node->lexeme)) {
+      double* number = (double*)numbers->current_top->lexeme;
+      *number = compute_prefix(*number, current_node->lexeme);
+    } else if (is_binary(current_node->lexeme)) {
+      double* number1 = (double*)pop(numbers);
+      double* number2 = (double*)numbers->current_top->lexeme;
+      *number2 = compute_binary(*number2, *number1, current_node->lexeme);
+      free(number1);
+    }
+    current_node = current_node->another_node;
+  }
+  free_all_numbers(rpn);
+  destroy_list(rpn);
+  return *(double*)numbers->current_top->lexeme;
 }

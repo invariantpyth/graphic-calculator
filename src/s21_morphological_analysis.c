@@ -1,5 +1,6 @@
 #include "s21_morphological_analysis.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -123,7 +124,7 @@ List* parse(char* input_string) {
     }
     if (input_string[point] == '(') {
       if (lexemes->end != NULL && (not_in_operators(lexemes->end->lexeme) ||
-                              lexemes->end->lexeme == close_parenthesis)) {
+                                   lexemes->end->lexeme == close_parenthesis)) {
         push_back((char*)multiply, lexemes);
       }
       push_back((char*)open_parenthesis, lexemes);
@@ -135,7 +136,7 @@ List* parse(char* input_string) {
     }
     if (input_string[point] == 'x') {
       if (lexemes->end != NULL && (not_in_operators(lexemes->end->lexeme) ||
-                              lexemes->end->lexeme == close_parenthesis)) {
+                                   lexemes->end->lexeme == close_parenthesis)) {
         push_back((char*)multiply, lexemes);
       }
       push_back((char*)variable, lexemes);
@@ -185,4 +186,50 @@ int rank(char* op) {
     rank_value = 1;
   }
   return rank_value;
+}
+
+double compute_prefix(double number, char* op) {
+  double ret_value = 0;
+  if (op == sin_o) {
+    ret_value = sin(number);
+  } else if (op == cos_o) {
+    ret_value = cos(number);
+  } else if (op == tan_o) {
+    ret_value = tan(number);
+  } else if (op == acos_o) {
+    ret_value = acos(number);
+  } else if (op == asin_o) {
+    ret_value = asin(number);
+  } else if (op == atan_o) {
+    ret_value = atan(number);
+  } else if (op == sqrt_o) {
+    ret_value = sqrt(number);
+  } else if (op == ln_o) {
+    ret_value = log(number);
+  } else if (op == log_o) {
+    ret_value = log10(number);
+  } else if (op == unary_minus) {
+    ret_value = -number;
+  } else if (op == unary_plus) {
+    ret_value = number;
+  }
+  return ret_value;
+}
+
+double compute_binary(double number1, double number2, char* op) {
+  double ret_value = 0;
+  if (op == mod_o) {
+    ret_value = fmod(number1, number2);
+  } else if (op == plus) {
+    ret_value = number1 + number2;
+  } else if (op == minus) {
+    ret_value = number1 - number2;
+  } else if (op == multiply) {
+    ret_value = number1 * number2;
+  } else if (op == divide) {
+    ret_value = number1 / number2;
+  } else if (op == power) {
+    ret_value = pow(number1, number2);
+  }
+  return ret_value;
 }

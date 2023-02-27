@@ -47,6 +47,7 @@ void destroy_list(List *lst) {
     free(start_node);
     start_node = next_node;
   }
+  free(lst);
 }
 
 void print_list(List lst) {

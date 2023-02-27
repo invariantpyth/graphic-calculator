@@ -13,4 +13,7 @@ int is_binary(char* op);
 int rank(char* op);
 List* parse(char* input_string);
 
+double compute_prefix(double number, char* op);
+double compute_binary(double number1, double number2, char* op);
+
 #endif  // SRC_MORPHOLOGICAL_ANALYSIS_H_
