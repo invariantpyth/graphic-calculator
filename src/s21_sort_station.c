@@ -39,7 +39,7 @@
 
 void free_all_numbers(List* lst) {
   Node* start_node = lst->start;
-  while (start_node->another_node != NULL) {
+  while (start_node != NULL) {
     Node* next_node = start_node->another_node;
     if (is_number(start_node->lexeme)) {
       free(start_node->lexeme);
