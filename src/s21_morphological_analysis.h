@@ -3,7 +3,7 @@
 #include "s21_stack.h"
 #include <stdlib.h>
 
-const char* which_operator(char* operator, int is_unary);
+const char* which_operator(char* op, int is_unary);
 double atof_my(char* number);
 size_t is_operator(char* str);
 size_t is_number(char* str);

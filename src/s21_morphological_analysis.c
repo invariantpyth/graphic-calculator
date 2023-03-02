@@ -48,10 +48,10 @@ const char* operators[] = {sin_o,
                            unary_minus};
 const char variable[] = "x";
 
-const char* which_operator(char* operator, int is_unary) {
-  size_t length = is_operator(operator);
+const char* which_operator(char* op, int is_unary) {
+  size_t length = is_operator(op);
   char buffer[5] = {0};
-  strncpy(buffer, operator, length);
+  strncpy(buffer, op, length);
   size_t i = 0;
   while (strcmp(buffer, operators[i])) {
     i++;

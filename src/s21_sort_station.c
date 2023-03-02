@@ -63,6 +63,7 @@ List* turn_to_rev_pol(char* input_string) {
   if (error != 0) {
     free_all_numbers(rpn);
     destroy_list(rpn);
+    rpn = NULL;
   }
   free(temp_stack);
   destroy_list(expression);
@@ -70,12 +71,20 @@ List* turn_to_rev_pol(char* input_string) {
   return rpn;
 }
 
+static int has_one_in_stack(Stack* st) { return (st->current_top != NULL); }
+
+static int has_two_in_stack(Stack* st) {
+  return (st->current_top != NULL && st->current_top->another_node != NULL);
+}
 
 double evaluate(char* expression) {
   List* rpn = turn_to_rev_pol(expression);
+  double nan = 0.0 / 0.0;
+  if (rpn == NULL) {
+    return nan;
+  }
   Stack* numbers = calloc(1, sizeof(Stack));
   Node* current_node = rpn->start;
-  // int err = (rpn));
   while (current_node != NULL) {
     if (is_number(current_node->lexeme)) {
       double* number = calloc(1, sizeof(double));
