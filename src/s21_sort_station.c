@@ -71,11 +71,11 @@ List* turn_to_rev_pol(char* input_string) {
   return rpn;
 }
 
-static int has_one_in_stack(Stack* st) { return (st->current_top != NULL); }
-
-static int has_two_in_stack(Stack* st) {
-  return (st->current_top != NULL && st->current_top->another_node != NULL);
-}
+//static int has_one_in_stack(Stack* st) { return (st->current_top != NULL); }
+//
+//static int has_two_in_stack(Stack* st) {
+//  return (st->current_top != NULL && st->current_top->another_node != NULL);
+//}
 
 double evaluate(char* expression) {
   List* rpn = turn_to_rev_pol(expression);
