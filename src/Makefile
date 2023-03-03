@@ -18,4 +18,4 @@ temp: clean s21_calc_lib.a
 	$(CC) $(CFLAGS) temp.c s21_calc_lib.a -o temp
 
 clean:
-	rm -f temp *.o
+	rm -f temp *.o *.a
