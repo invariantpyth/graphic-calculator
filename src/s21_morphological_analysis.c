@@ -103,7 +103,8 @@ List* parse(char* input_string) {
     size_t block_size = 0;
     if ((block_size = is_operator(input_string + point))) {
       int is_unary = 0;
-      if (lexemes->end == NULL || lexemes->end->lexeme == open_parenthesis) {
+      if (lexemes->end == NULL || lexemes->end->lexeme == open_parenthesis ||
+          !not_in_operators(lexemes->end->lexeme)) {
         is_unary = 1;
       }
       const char* op = which_operator(input_string + point, is_unary);
@@ -159,7 +160,7 @@ int is_unary(char* op) {
   return (op == unary_minus || op == unary_plus) ? 1 : 0;
 }
 
-int is_binary(char* op) { return !(is_unary(op) || is_prefix(op)); }
+int is_binary(char* op) { return !(is_prefix(op)); }
 
 int is_prefix(char* op) {
   size_t i = 0;
