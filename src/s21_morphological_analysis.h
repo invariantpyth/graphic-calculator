@@ -1,5 +1,11 @@
 #ifndef SRC_MORPHOLOGICAL_ANALYSIS_H_
 #define SRC_MORPHOLOGICAL_ANALYSIS_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include "s21_stack.h"
 #include <stdlib.h>
 
@@ -15,5 +21,9 @@ List* parse(char* input_string);
 
 double compute_prefix(double number, char* op);
 double compute_binary(double number1, double number2, char* op);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // SRC_MORPHOLOGICAL_ANALYSIS_H_

@@ -1,6 +1,11 @@
 #ifndef SRC_S21_STACK_H_
 #define SRC_S21_STACK_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 typedef struct Node{
   char* lexeme;
   struct Node* another_node;
@@ -23,5 +28,8 @@ void push_back(char* lexeme, List* lst);
 void print_list(List lst);
 void destroy_list(List *lst);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // SRC_S21_STACK_H_

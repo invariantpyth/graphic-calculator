@@ -108,12 +108,6 @@ List* parse(char* input_string) {
         is_unary = 1;
       }
       const char* op = which_operator(input_string + point, is_unary);
-      if (lexemes->end != NULL &&
-          (not_in_operators(lexemes->end->lexeme) ||
-           lexemes->end->lexeme == close_parenthesis) &&
-          !is_symbol_operator(*op)) {
-        push_back((char*)multiply, lexemes);
-      }
       push_back((char*)op, lexemes);
       point += block_size;
     }
@@ -124,10 +118,6 @@ List* parse(char* input_string) {
       point += block_size;
     }
     if (input_string[point] == '(') {
-      if (lexemes->end != NULL && (not_in_operators(lexemes->end->lexeme) ||
-                                   lexemes->end->lexeme == close_parenthesis)) {
-        push_back((char*)multiply, lexemes);
-      }
       push_back((char*)open_parenthesis, lexemes);
       point++;
     }
@@ -136,10 +126,6 @@ List* parse(char* input_string) {
       point++;
     }
     if (input_string[point] == 'x') {
-      if (lexemes->end != NULL && (not_in_operators(lexemes->end->lexeme) ||
-                                   lexemes->end->lexeme == close_parenthesis)) {
-        push_back((char*)multiply, lexemes);
-      }
       push_back((char*)variable, lexemes);
       point++;
     }
