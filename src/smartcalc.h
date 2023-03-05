@@ -78,8 +78,15 @@ private slots:
 
     void on_pushButton_atan_clicked();
 
+    void on_lineEdit_returnPressed();
+
+protected:
+    void keyPressEvent(QKeyEvent* pe);
+
 private:
     QString expression;
     Ui::SmartCalc *ui;
+    void edit_expression(QString new_token);
+    void eval();
 };
 #endif // SMARTCALC_H
