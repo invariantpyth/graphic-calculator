@@ -53,7 +53,7 @@ const char* which_operator(char* op, int is_unary) {
   char buffer[5] = {0};
   strncpy(buffer, op, length);
   size_t i = 0;
-  while (strcmp(buffer, operators[i])) {
+  while (i < OPERATORS_COUNT && strcmp(buffer, operators[i])) {
     i++;
   }
   if (i == 12 && is_unary) {
@@ -62,7 +62,11 @@ const char* which_operator(char* op, int is_unary) {
   if (i == 13 && is_unary) {
     i = 18;
   }
-  return operators[i];
+  char* ret_value = NULL;
+  if (i != OPERATORS_COUNT) {
+      ret_value = operators[i];
+  }
+  return ret_value;
 }
 
 int is_symbol_operator(char sym) { return !!strchr("+-()^*/", sym); }
@@ -99,7 +103,8 @@ static int not_in_operators(char* pointer) {
 List* parse(char* input_string) {
   List* lexemes = calloc(1, sizeof(List));
   size_t point = 0;
-  while (input_string[point] != '\0') {
+  int err = 0;
+  while (input_string[point] != '\0' && !err) {
     size_t block_size = 0;
     if ((block_size = is_operator(input_string + point))) {
       int is_unary = 0;
@@ -108,8 +113,12 @@ List* parse(char* input_string) {
         is_unary = 1;
       }
       const char* op = which_operator(input_string + point, is_unary);
-      push_back((char*)op, lexemes);
-      point += block_size;
+      if (op == NULL) {
+          err = 1;
+      } else {
+          push_back((char*)op, lexemes);
+          point += block_size;
+      }
     }
     if ((block_size = is_number(input_string + point))) {
       char* number = calloc(block_size + 1, sizeof(char));
@@ -132,6 +141,10 @@ List* parse(char* input_string) {
     if (input_string[point] == ' ') {
       point++;
     }
+  }
+  if (err) {
+      destroy_list(lexemes);
+      lexemes = NULL;
   }
   return lexemes;
 }
