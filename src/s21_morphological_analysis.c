@@ -49,27 +49,34 @@ const char* operators[] = {sin_o,
 const char variable[] = "x";
 
 const char* which_operator(char* op, int is_unary) {
+  int err = 0;
   size_t length = is_operator(op);
-  char buffer[5] = {0};
-  strncpy(buffer, op, length);
   size_t i = 0;
-  while (i < OPERATORS_COUNT && strcmp(buffer, operators[i])) {
-    i++;
+  if (length < 5) {
+    char buffer[5] = {0};
+    strncpy(buffer, op, length);
+
+    while (i < OPERATORS_COUNT && strcmp(buffer, operators[i])) {
+      i++;
+    }
+    if (i == 12 && is_unary) {
+      i = 17;
+    }
+    if (i == 13 && is_unary) {
+      i = 18;
+    }
+  } else {
+    err = 1;
   }
-  if (i == 12 && is_unary) {
-    i = 17;
-  }
-  if (i == 13 && is_unary) {
-    i = 18;
-  }
+
   char* ret_value = NULL;
-  if (i != OPERATORS_COUNT) {
-      ret_value = operators[i];
+  if (i < OPERATORS_COUNT && !err) {
+      ret_value = (char*)operators[i];
   }
   return ret_value;
 }
 
-int is_symbol_operator(char sym) { return !!strchr("+-()^*/", sym); }
+int is_symbol_operator(char sym) { return strchr("+-()^*/", sym) != NULL; }
 
 size_t is_operator(char* str) {
   size_t ret_value = 0;
