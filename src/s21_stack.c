@@ -40,7 +40,7 @@ void push_back(char* lexeme, List* lst) {
   }
 }
 
-void destroy_list(List *lst) {
+void destroy_list(List* lst) {
   Node* start_node = lst->start;
   while (start_node != NULL) {
     Node* next_node = start_node->another_node;

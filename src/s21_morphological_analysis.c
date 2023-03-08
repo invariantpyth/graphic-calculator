@@ -71,7 +71,7 @@ const char* which_operator(char* op, int is_unary) {
 
   char* ret_value = NULL;
   if (i < OPERATORS_COUNT && !err) {
-      ret_value = (char*)operators[i];
+    ret_value = (char*)operators[i];
   }
   return ret_value;
 }
@@ -121,10 +121,10 @@ List* parse(char* input_string) {
       }
       const char* op = which_operator(input_string + point, is_unary);
       if (op == NULL) {
-          err = 1;
+        err = 1;
       } else {
-          push_back((char*)op, lexemes);
-          point += block_size;
+        push_back((char*)op, lexemes);
+        point += block_size;
       }
     }
     if ((block_size = is_number(input_string + point))) {
@@ -150,8 +150,8 @@ List* parse(char* input_string) {
     }
   }
   if (err) {
-      destroy_list(lexemes);
-      lexemes = NULL;
+    destroy_list(lexemes);
+    lexemes = NULL;
   }
   return lexemes;
 }

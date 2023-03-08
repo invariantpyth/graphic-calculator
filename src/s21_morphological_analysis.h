@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
+#include <stdlib.h>
 
 #include "s21_stack.h"
-#include <stdlib.h>
 
 const char* which_operator(char* op, int is_unary);
 double atof_my(char* number);
