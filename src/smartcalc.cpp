@@ -1,399 +1,314 @@
 #include "smartcalc.h"
+
+#include <QKeyEvent>
+
 #include "./ui_smartcalc.h"
 #include "s21_sort_station.h"
 
- #include <QKeyEvent>
-
-SmartCalc::SmartCalc(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::SmartCalc)
-{
-    ui->setupUi(this);
-    ui->lineEdit->setMaxLength(1000);
-    ui->lineEdit->setReadOnly(true);
-    expression = "0";
-    ui->lineEdit->setText(expression);
+SmartCalc::SmartCalc(QWidget* parent)
+    : QMainWindow(parent), ui(new Ui::SmartCalc) {
+  ui->setupUi(this);
+  ui->lineEdit->setMaxLength(1000);
+  ui->lineEdit->setReadOnly(true);
+  expression = "0";
+  ui->lineEdit->setText(expression);
 }
 
-SmartCalc::~SmartCalc()
-{
-    delete ui;
+SmartCalc::~SmartCalc() { delete ui; }
+
+void SmartCalc::on_pushButton_0_clicked() { this->edit_expression("0"); }
+
+void SmartCalc::on_pushButton_1_clicked() { this->edit_expression("1"); }
+
+void SmartCalc::on_pushButton_2_clicked() { this->edit_expression("2"); }
+
+void SmartCalc::on_pushButton_3_clicked() { this->edit_expression("3"); }
+
+void SmartCalc::on_pushButton_4_clicked() { this->edit_expression("4"); }
+
+void SmartCalc::on_pushButton_5_clicked() { this->edit_expression("5"); }
+
+void SmartCalc::on_pushButton_6_clicked() { this->edit_expression("6"); }
+
+void SmartCalc::on_pushButton_7_clicked() { this->edit_expression("7"); }
+
+void SmartCalc::on_pushButton_8_clicked() { this->edit_expression("8"); }
+
+void SmartCalc::on_pushButton_9_clicked() { this->edit_expression("9"); }
+
+void SmartCalc::on_pushButton_x_clicked() { this->edit_expression("x"); }
+
+
+void SmartCalc::on_pushButton_dot_clicked() {
+  expression += ".";
+  ui->lineEdit->setText(expression);
 }
 
+void SmartCalc::on_pushButton_eq_clicked() { this->eval(); }
 
-void SmartCalc::on_pushButton_0_clicked()
-{
-    this->edit_expression("0");
-
+void SmartCalc::on_pushButton_plus_clicked() {
+  expression += "+";
+  ui->lineEdit->setText(expression);
 }
 
-void SmartCalc::on_pushButton_1_clicked()
-{
-    this->edit_expression("1");
-
+void SmartCalc::on_pushButton_minus_clicked() {
+  expression += "-";
+  ui->lineEdit->setText(expression);
 }
 
-
-void SmartCalc::on_pushButton_2_clicked()
-{
-    this->edit_expression("2");
-
+void SmartCalc::on_pushButton_divide_clicked() {
+  expression += "/";
+  ui->lineEdit->setText(expression);
 }
 
-
-void SmartCalc::on_pushButton_3_clicked()
-{
-    this->edit_expression("3");
-
+void SmartCalc::on_pushButton_multiply_clicked() {
+  expression += "*";
+  ui->lineEdit->setText(expression);
 }
 
-
-void SmartCalc::on_pushButton_4_clicked()
-{
-    this->edit_expression("4");
-
+void SmartCalc::on_pushButton_power_clicked() {
+  expression += "^";
+  ui->lineEdit->setText(expression);
 }
 
-
-void SmartCalc::on_pushButton_5_clicked()
-{
-    this->edit_expression("5");
-
+void SmartCalc::on_pushButton_clear_clicked() {
+  expression = "0";
+  ui->lineEdit->setText(expression);
 }
 
-
-void SmartCalc::on_pushButton_6_clicked()
-{
-    this->edit_expression("6");
-
-}
-
-
-void SmartCalc::on_pushButton_7_clicked()
-{
-    this->edit_expression("7");
-
-}
-
-
-void SmartCalc::on_pushButton_8_clicked()
-{
-    this->edit_expression("8");
-}
-
-
-void SmartCalc::on_pushButton_9_clicked()
-{
-    this->edit_expression("9");
-
-}
-
-
-void SmartCalc::on_pushButton_dot_clicked()
-{
-    expression += ".";
-    ui->lineEdit->setText(expression);
-
-}
-
-
-void SmartCalc::on_pushButton_eq_clicked()
-{
-    this->eval();
-}
-
-
-void SmartCalc::on_pushButton_plus_clicked()
-{
-    expression += "+";
-    ui->lineEdit->setText(expression);
-}
-
-
-void SmartCalc::on_pushButton_minus_clicked()
-{
-    expression += "-";
-    ui->lineEdit->setText(expression);
-}
-
-
-void SmartCalc::on_pushButton_divide_clicked()
-{
-    expression += "/";
-    ui->lineEdit->setText(expression);
-}
-
-
-void SmartCalc::on_pushButton_multiply_clicked()
-{
+void SmartCalc::on_pushButton_op_clicked() {
+  if (expression.back().isDigit() && !(expression == "0")) {
     expression += "*";
-    ui->lineEdit->setText(expression);
+  }
+  this->edit_expression("(");
 }
 
-
-void SmartCalc::on_pushButton_power_clicked()
-{
-    expression += "^";
+void SmartCalc::on_pushButton_cp_clicked() {
+  int ops = expression.count('(');
+  int cps = expression.count(')');
+  if (ops > cps) {
+    expression += ")";
     ui->lineEdit->setText(expression);
+  }
 }
 
+void SmartCalc::on_pushButton_mod_clicked() {
+  expression += "mod";
+  ui->lineEdit->setText(expression);
+}
 
-
-
-void SmartCalc::on_pushButton_clear_clicked()
-{
-
+void SmartCalc::on_pushButton_del_clicked() {
+  expression.chop(1);
+  if (expression.isEmpty()) {
     expression = "0";
+  }
+  ui->lineEdit->setText(expression);
+}
+
+void SmartCalc::on_pushButton_log_clicked() {
+  if (expression.back().isDigit() && !(expression == "0")) {
+    expression += "*";
+  }
+  this->edit_expression("log10(");
+}
+
+void SmartCalc::on_pushButton_ln_clicked() {
+  if (expression.back().isDigit() && !(expression == "0")) {
+    expression += "*";
+  }
+  this->edit_expression("ln(");
+}
+
+void SmartCalc::on_pushButton_sin_clicked() {
+  if (expression.back().isDigit() && !(expression == "0")) {
+    expression += "*";
+  }
+  this->edit_expression("sin(");
+}
+
+void SmartCalc::on_pushButton_cos_clicked() {
+  if (expression.back().isDigit() && !(expression == "0")) {
+    expression += "*";
+  }
+  this->edit_expression("cos(");
+}
+
+void SmartCalc::on_pushButton_tan_clicked() {
+  if (expression.back().isDigit() && !(expression == "0")) {
+    expression += "*";
+  }
+  this->edit_expression("tan(");
+}
+
+void SmartCalc::on_pushButton_sqrt_clicked() {
+  if (expression.back().isDigit() && !(expression == "0")) {
+    expression += "*";
+  }
+  this->edit_expression("sqrt(");
+}
+
+void SmartCalc::on_pushButton_asin_clicked() {
+  if (expression.back().isDigit() && !(expression == "0")) {
+    expression += "*";
+  }
+  this->edit_expression("asin(");
+}
+
+void SmartCalc::on_pushButton_acos_clicked() {
+  if (expression.back().isDigit() && !(expression == "0")) {
+    expression += "*";
+  }
+  this->edit_expression("acos(");
+}
+
+void SmartCalc::on_pushButton_atan_clicked() {
+  if (expression.back().isDigit() && !(expression == "0")) {
+    expression += "*";
+  }
+  this->edit_expression("atan(");
+}
+
+void SmartCalc::on_lineEdit_returnPressed() { this->eval(); }
+
+void SmartCalc::edit_expression(QString new_token) {
+  if (expression != "0") {
+    if (expression.back() == ')') {
+      expression += "*";
+    }
+    expression.append(new_token);
     ui->lineEdit->setText(expression);
-}
-
-
-void SmartCalc::on_pushButton_op_clicked()
-{
-    if (expression.back().isDigit() && !(expression == "0")) {
-        expression += "*";
-    }
-    this->edit_expression("(");
-}
-
-
-void SmartCalc::on_pushButton_cp_clicked()
-{
-    int ops = expression.count('(');
-    int cps = expression.count(')');
-    if (ops > cps) {
-        expression += ")";
-        ui->lineEdit->setText(expression);
-    }
-}
-
-
-
-
-void SmartCalc::on_pushButton_nod_clicked()
-{
-    expression += "mod";
+  } else {
+    expression = new_token;
     ui->lineEdit->setText(expression);
-}
-
-
-void SmartCalc::on_pushButton_del_clicked()
-{
-    expression.chop(1);
-    if (expression.isEmpty()) {
-        expression = "0";
-    }
-    ui->lineEdit->setText(expression);
-}
-
-
-void SmartCalc::on_pushButton_log_clicked()
-{
-    if (expression.back().isDigit() && !(expression == "0")) {
-        expression += "*";
-    }
-    this->edit_expression("log10(");
-}
-
-
-void SmartCalc::on_pushButton_ln_clicked()
-{
-    if (expression.back().isDigit() && !(expression == "0")) {
-        expression += "*";
-    }
-    this->edit_expression("ln(");
-}
-
-
-void SmartCalc::on_pushButton_sin_clicked()
-{
-    if (expression.back().isDigit() && !(expression == "0")) {
-        expression += "*";
-    }
-    this->edit_expression("sin(");
-}
-
-
-void SmartCalc::on_pushButton_cos_clicked()
-{
-    if (expression.back().isDigit() && !(expression == "0")) {
-        expression += "*";
-    }
-    this->edit_expression("cos(");
-}
-
-
-void SmartCalc::on_pushButton_tan_clicked()
-{
-    if (expression.back().isDigit() && !(expression == "0")) {
-        expression += "*";
-    }
-    this->edit_expression("tan(");
-}
-
-
-
-void SmartCalc::on_pushButton_sqrt_clicked()
-{
-    if (expression.back().isDigit() && !(expression == "0")) {
-        expression += "*";
-    }
-    this->edit_expression("sqrt(");
-
-}
-
-
-void SmartCalc::on_pushButton_asin_clicked()
-{
-    if (expression.back().isDigit() && !(expression == "0")) {
-        expression += "*";
-    }
-    this->edit_expression("asin(");
-}
-
-
-void SmartCalc::on_pushButton_acos_clicked()
-{
-    if (expression.back().isDigit() && !(expression == "0")) {
-        expression += "*";
-    }
-    this->edit_expression("acos(");
-}
-
-
-void SmartCalc::on_pushButton_atan_clicked()
-{
-    if (expression.back().isDigit() && !(expression == "0")) {
-        expression += "*";
-    }
-    this->edit_expression("atan(");
-}
-
-
-
-void SmartCalc::on_lineEdit_returnPressed()
-{
-    this->eval();
-}
-
-void SmartCalc::edit_expression(QString new_token)
-{
-    if (expression != "0") {
-        if (expression.back() == ')') {
-            expression += "*";
-        }
-        expression.append(new_token);
-        ui->lineEdit->setText(expression);
-    } else {
-        expression = new_token;
-        ui->lineEdit->setText(expression);
-    }
+  }
 }
 
 void SmartCalc::keyPressEvent(QKeyEvent* pe) {
-    bool is_a = expression.back() == 'a';
-    bool is_l = expression.back() == 'l';
-    bool is_s = expression.back() == 's';
-    bool not_start = !is_a && !is_l && !is_s;
-    bool last_is_digit = expression.back().isDigit();
-    bool is_zero = expression == "0";
-    if (pe->key() >= Qt::Key_0 && pe->key() <= Qt::Key_9) {
-        QString number = pe->text();
-        this->edit_expression(number);
-    } else if (pe->key() == Qt::Key_A && not_start) {
-        if (last_is_digit && !is_zero) {
-            expression += "*";
-        };
-        this->edit_expression("a");
-    } else if (pe->key() == Qt::Key_L && not_start) {
-        if (last_is_digit && !is_zero) {
-            expression += "*";
-        }
-        this->edit_expression("l");
-    } else if (pe->key() == Qt::Key_S && !is_l && !is_s) {
-        if (last_is_digit && !is_zero) {
-            expression += "*";
-        }
-        if (is_a) {
-            this->edit_expression("sin(");
-        } else {
-            this->edit_expression("s");
-        }
-    } else if (pe->key() == Qt::Key_C && !is_l && !is_s) {
-        if (last_is_digit && !is_zero) {
-            expression += "*";
-        }
-        this->edit_expression("cos(");
-    } else if (pe->key() == Qt::Key_T && !is_l && !is_s) {
-        if (last_is_digit && !is_zero) {
-            expression += "*";
-        }
-        this->edit_expression("tan(");
-    } else if (pe->key() == Qt::Key_I && is_s) {
-        if (last_is_digit && !is_zero) {
-            expression += "*";
-        }
-        this->edit_expression("in(");
-    } else if (pe->key() == Qt::Key_Q && is_s) {
-        if (last_is_digit && !is_zero) {
-            expression += "*";
-        }
-        this->edit_expression("qrt(");
-    } else if (pe->key() == Qt::Key_O && is_l) {
-        this->edit_expression("og10(");
-    } else if (pe->key() == Qt::Key_N && is_l) {
-        this->edit_expression("n(");
-    } else if (pe->key() == Qt::Key_M && not_start) {
-        expression += "mod";
-        ui->lineEdit->setText(expression);
-    } else if (pe->key() == Qt::Key_D) {
-        expression.chop(1);
-        if (expression.isEmpty()) {
-            expression = "0";
-        }
-        ui->lineEdit->setText(expression);
-    } else if (pe->key() == Qt::Key_Plus && not_start) {
-        expression += "+";
-        ui->lineEdit->setText(expression);
-    } else if (pe->key() == Qt::Key_Minus && not_start) {
-        expression += "-";
-        ui->lineEdit->setText(expression);
-    } else if (pe->key() == Qt::Key_Slash && not_start) {
-        expression += "/";
-        ui->lineEdit->setText(expression);
-    } else if (pe->key() == Qt::Key_AsciiCircum && not_start) {
-        expression += "^";
-        ui->lineEdit->setText(expression);
-    } else if (pe->key() == Qt::Key_Asterisk && not_start) {
-        expression += "*";
-        ui->lineEdit->setText(expression);
-    } else if (pe->key() == Qt::Key_Period && not_start) {
-        expression += ".";
-        ui->lineEdit->setText(expression);
-    } else if (pe->key() == Qt::Key_ParenLeft && not_start) {
-        if (last_is_digit && !is_zero) {
-            expression += "*";
-        }
-        this->edit_expression("(");
-    } else if (pe->key() == Qt::Key_ParenRight && not_start) {
-        int ops = expression.count('(');
-        int cps = expression.count(')');
-        if (ops > cps) {
-            expression += ")";
-            ui->lineEdit->setText(expression);
-        }
-    } else if (pe->key() == Qt::Key_X && not_start) {
-        this->edit_expression("x");
-    }  else if (pe->key() == Qt::Key_Equal && not_start) {
-        this->eval();
-    }
+  bool is_text = (pe->key() >= '(' && pe->key() <= '^');
+  qDebug() << pe->key();
+  if (is_text) {
+    key_buffer += pe->text().toLower();
+    process_key_buffer();
+  } else if (pe->key() == Qt::Key_Backspace) {
+    ui->pushButton_del->animateClick();
+  }
+}
+
+void SmartCalc::process_key_buffer() {
+  if (key_buffer == "0") {
+    ui->pushButton_0->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "1") {
+    ui->pushButton_1->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "2") {
+    ui->pushButton_2->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "3") {
+    ui->pushButton_3->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "4") {
+    ui->pushButton_4->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "5") {
+    ui->pushButton_5->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "6") {
+    ui->pushButton_6->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "7") {
+    ui->pushButton_7->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "8") {
+    ui->pushButton_8->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "9") {
+    ui->pushButton_9->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "+") {
+    ui->pushButton_plus->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "-") {
+    ui->pushButton_minus->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "*") {
+    ui->pushButton_multiply->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "/") {
+    ui->pushButton_divide->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "m") {
+    ui->pushButton_mod->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "=") {
+    ui->pushButton_eq->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "(") {
+    ui->pushButton_op->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == ")") {
+    ui->pushButton_cp->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "^") {
+    ui->pushButton_power->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == ".") {
+    ui->pushButton_dot->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "x") {
+    ui->pushButton_x->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "c") {
+    ui->pushButton_cos->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "t") {
+    expression.chop(1);
+    ui->pushButton_tan->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "a") {
+    expression += "a";
+  } else if (key_buffer == "as") {
+    expression.chop(1);
+    ui->pushButton_asin->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "ac") {
+    expression.chop(1);
+    ui->pushButton_acos->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "at") {
+    expression.chop(1);
+    ui->pushButton_atan->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "l") {
+    expression += "l";
+  } else if (key_buffer == "ln") {
+    expression.chop(1);
+    ui->pushButton_ln->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "lo") {
+    expression.chop(1);
+    ui->pushButton_log->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "s") {
+    expression += "s";
+  } else if (key_buffer == "si") {
+    expression.chop(1);
+    ui->pushButton_sin->animateClick();
+    key_buffer.clear();
+  } else if (key_buffer == "sq") {
+    expression.chop(1);
+    ui->pushButton_sqrt->animateClick();
+    key_buffer.clear();
+  } else {
+    key_buffer.clear();
+  }
 }
 
 void SmartCalc::eval() {
-    expression = ui->lineEdit->text();
-    QByteArray ba = expression.toLocal8Bit();
-    char* data_expression = ba.data();
-    double answer = evaluate(data_expression);
-    expression = QString::number(answer);
-    ui->lineEdit->setText(expression);
+  expression = ui->lineEdit->text();
+  QByteArray ba = expression.toLocal8Bit();
+  char* data_expression = ba.data();
+  double answer = evaluate(data_expression, 0);
+  expression = QString::number(answer, 'f');
+  ui->lineEdit->setText(expression);
 }
