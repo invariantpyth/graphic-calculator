@@ -14,9 +14,14 @@ class SmartCalc : public QMainWindow {
 
  public:
   SmartCalc(QWidget *parent = nullptr);
+
   ~SmartCalc();
 
- private slots:
+signals:
+  void valueChanged(QString& message);
+
+//  QString get_expression();
+private slots:
   void on_pushButton_0_clicked();
 
   void on_pushButton_1_clicked();
@@ -83,7 +88,13 @@ class SmartCalc : public QMainWindow {
 
   void on_lineEdit_returnPressed();
 
- protected:
+//  void on_lineEdit_backspacePressed();
+
+  bool eventFilter(QObject *target, QEvent *event);
+
+  void on_pushButton_graph_clicked();
+
+protected:
   void keyPressEvent(QKeyEvent *pe);
 
  private:

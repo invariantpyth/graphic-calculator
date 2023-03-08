@@ -3,16 +3,22 @@
 #include <QKeyEvent>
 
 #include "./ui_smartcalc.h"
+#include "graph.h"
 #include "s21_sort_station.h"
 
-SmartCalc::SmartCalc(QWidget* parent)
+SmartCalc::SmartCalc(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::SmartCalc) {
   ui->setupUi(this);
   ui->lineEdit->setMaxLength(1000);
   ui->lineEdit->setReadOnly(true);
   expression = "0";
   ui->lineEdit->setText(expression);
+  ui->lineEdit->installEventFilter(this);
 }
+
+// QString SmartCalc::get_expression() {
+//     return expression;
+// }
 
 SmartCalc::~SmartCalc() { delete ui; }
 
@@ -37,7 +43,6 @@ void SmartCalc::on_pushButton_8_clicked() { this->edit_expression("8"); }
 void SmartCalc::on_pushButton_9_clicked() { this->edit_expression("9"); }
 
 void SmartCalc::on_pushButton_x_clicked() { this->edit_expression("x"); }
-
 
 void SmartCalc::on_pushButton_dot_clicked() {
   expression += ".";
@@ -169,6 +174,7 @@ void SmartCalc::on_pushButton_atan_clicked() {
 }
 
 void SmartCalc::on_lineEdit_returnPressed() { this->eval(); }
+// void SmartCalc::on_lineEdit_backspacePressed() {}
 
 void SmartCalc::edit_expression(QString new_token) {
   if (expression != "0") {
@@ -183,7 +189,7 @@ void SmartCalc::edit_expression(QString new_token) {
   }
 }
 
-void SmartCalc::keyPressEvent(QKeyEvent* pe) {
+void SmartCalc::keyPressEvent(QKeyEvent *pe) {
   bool is_text = (pe->key() >= '(' && pe->key() <= '^');
   qDebug() << pe->key();
   if (is_text) {
@@ -262,7 +268,6 @@ void SmartCalc::process_key_buffer() {
     ui->pushButton_cos->animateClick();
     key_buffer.clear();
   } else if (key_buffer == "t") {
-    expression.chop(1);
     ui->pushButton_tan->animateClick();
     key_buffer.clear();
   } else if (key_buffer == "a") {
@@ -307,8 +312,34 @@ void SmartCalc::process_key_buffer() {
 void SmartCalc::eval() {
   expression = ui->lineEdit->text();
   QByteArray ba = expression.toLocal8Bit();
-  char* data_expression = ba.data();
+  char *data_expression = ba.data();
   double answer = evaluate(data_expression, 0);
   expression = QString::number(answer, 'f');
   ui->lineEdit->setText(expression);
+}
+
+bool SmartCalc::eventFilter(QObject *target, QEvent *event) {
+  if (target == ui->lineEdit) {
+    if (event->type() == QEvent::KeyPress) {
+      QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+      if (keyEvent->key() == Qt::Key_Backspace) {
+        if (keyEvent->modifiers() == Qt::ShiftModifier) {
+          ui->pushButton_clear->animateClick();
+          return true;
+        } else {
+          ui->pushButton_del->animateClick();
+          return true;
+        }
+      }
+    }
+  }
+  return QWidget::eventFilter(target, event);
+}
+
+void SmartCalc::on_pushButton_graph_clicked() {
+  graph graph_window;
+  graph &window_ref = graph_window;
+  graph_window.setModal(true);
+  graph_window.set_expression(expression);
+  graph_window.exec();
 }
