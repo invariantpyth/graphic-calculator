@@ -28,6 +28,9 @@ set(PROJECT_SOURCES
         s21_stack.c
         s21_stack.h
         smartcalc.ui
+        graph.h
+        graph.cpp
+        graph.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
