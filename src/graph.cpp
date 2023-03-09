@@ -95,7 +95,7 @@ void graph::paintEvent(QPaintEvent *) {
     int x_pixel_coord = x_pixel + up_left.x();
     if (abs(fx[x_pixel - 1] - fx[x_pixel - 1]) < 2 && !std::isnan(fx[x_pixel - 1]) &&
         !std::isnan(fx[x_pixel]) && !std::isinf(fx[x_pixel - 1]) && !std::isinf(fx[x_pixel]) &&
-        fx[x_pixel] >= up_left.y() && fx[x_pixel] <= down_right.y()) {
+        fx[x_pixel] >= up_left.y() && fx[x_pixel] <= down_right.y() && fx[x_pixel - 1] >= up_left.y() && fx[x_pixel - 1] <= down_right.y()) {
       QLine line(x_pixel_coord - 1, fx[x_pixel - 1], x_pixel_coord,
                  fx[x_pixel]);
       painter.drawLine(line);
